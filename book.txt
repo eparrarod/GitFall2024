@@ -13,3 +13,10 @@ On branch main
 Your branch is up to date with 'origin/main'.
 
 nothing to commit, working tree clean
+On branch feature1
+Your branch is up to date with 'origin/feature1'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   answers.txt
+
