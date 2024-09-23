@@ -8,5 +8,7 @@ If you do not see this. You have not pulled/forked the repository after classs c
 
 Are you sleepy?
 
+Sophia Brix
+Github User: thepowerkey888
 
 # GitFall2024
