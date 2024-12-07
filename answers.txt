@@ -1,0 +1,13 @@
+ECHO is on.
+" 12 commits have been done so far." 
+".gitignore was last modified 9/21/2024" 
+" you can use git log --before="06/01/2020" then gitcheckout main." 
+"number of modifications on each file, gitignore =1, bookshop.java = 1, main.java =5, README.md = 5, book.txt = 2, properties.txt =2" 
+"two additions operations were involved in creating the REMOVE.txt file" 
+"the difference between git log and git git status is that git log shows all the commits made with deatils about each commit and git status shows a summary of the current working directory and staging." 
+"shortlog provides a summary of git log and is a condensed version." 
+" git log -- Main.java would show the list of commits" 
+"you would use git log --follow --Main.java this would display the commit history, --follow will track the file if it has had renames."  
+"git log --grep account would show the list of the commits whose commit message contrains the word 'account' " 
+"to see all the commits made a specific person you can use, git log --author = name " 
+"to see all the commits made by Lauren fromthose specific dates you can use the command git log --author = 'lauren' --since='2014-01-05' --until='2024-01-14' " 
