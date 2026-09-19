@@ -1,3 +1,5 @@
+Justin Ho
+JustinHo09
 # GitFall2024
 
 
@@ -6,7 +8,8 @@ This is the starter code for your Git Assignment.
 If you do not see this. You have not pulled/forked the repository after classs correctly
 
 
-Are you sleepy?
+Are you sleepy? - No
 
 
-# GitFall2024
+# GitFall2026
+
