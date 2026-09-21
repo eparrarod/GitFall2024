@@ -28,7 +28,7 @@ public class Spire {
         if(!isValid(file,id)){
             return;
         }else{
-            //read file
+            readFile(file,id);
         }
     }
 
@@ -40,6 +40,86 @@ public class Spire {
      */
     private static boolean isValid(File file, int id){
         return !file.exists();
+    }
+    
+    private static void readFile(File file,int id){
+        // Try to read the file to see if it is readable or will cause an error.
+        try (Scanner fileScanner = new Scanner(file)){
+
+            // Keep track of the invalid cards
+            ArrayList <String> invalid = new ArrayList<>();
+
+            // Total cost of the deck
+            int total = 0;
+
+            // Frequency of each valid cost for the histogram
+            int costFrequency [] = new int[7];
+
+            // The cost of a card after it is deciphered
+            int cost;
+
+            // Count of how many cards there are in the deck
+            int rowCount=0;
+
+            // The ArrayList of all valid card names which are real Slay the Spire | card names
+            ArrayList<String> validCardNames = validNames();
+
+            // Iterate over the entire deck
+            while(fileScanner.hasNextLine()){
+                String line = fileScanner.nextLine();
+
+                // Only if the line contains a colon which indicates the row is a data row that is valid
+                if(line.contains(":")){
+
+                    // Increment card count and if it is over 1000 return with the void file.
+                    rowCount++;
+                    if(rowCount>1000){
+                        //void file
+                        return;
+                    }
+
+                    // Split the row into the card name and the cost which are both strings.
+
+                    // See if both the card name and cost are valid values to either add to the total cost
+                    // and frequency count or invalid to add to the invalid counter.
+                }
+            }
+
+            //Write PDF REPORT
+
+        }catch (FileNotFoundException e){
+            System.out.println("File not found");
+        }
+    }
+
+    /**
+     * This checks if a card's name is in the ArrayList of valid names, which are real
+     * names of Slay the Spire | cards, or not to check if a card is valid from its name.
+     * @param cardName The name of the card to check.
+     * @param validCardNames The ArrayList of valid card names.
+     * @return True if the card name is valid and False if the card name is invalid.
+     */
+    private static boolean validCard(String cardName, ArrayList<String> validCardNames){
+        return !cardName.isEmpty() && validCardNames.contains(cardName.toLowerCase());
+    }
+
+    /**
+     * This reads a file on the same directory as the program called cards.txt, which contains
+     * all the valid card names from Slay the Spire where each row is one card name, and
+     * puts them in an ArrayList.
+     * @return ArrayList of with all the card names inside of it.
+     * @throws FileNotFoundException
+     */
+    private static ArrayList<String> validNames() throws FileNotFoundException {
+        Scanner scanner = new Scanner(new File("cards.txt"));
+
+        ArrayList<String> validNames = new ArrayList<>();
+
+        while (scanner.hasNextLine()) {
+            validNames.add(scanner.nextLine().toLowerCase().strip());
+        }
+        return validNames;
+
     }
 
 }
