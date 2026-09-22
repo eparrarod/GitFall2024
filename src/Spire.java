@@ -14,9 +14,14 @@ import org.openpdf.text.Document;
 import org.openpdf.text.DocumentException;
 import org.openpdf.text.Paragraph;
 import org.openpdf.text.pdf.PdfWriter;
+import org.openpdf.text.Image;
 
 // This is where I found the .jar file for JFreeChart:https://mvnrepository.com/artifact/org.jfree/jfreechart/1.5.6
-
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.data.statistics.HistogramDataset;
+import org.jfree.chart.plot.PlotOrientation;
 
 public class Spire {
 
@@ -27,6 +32,7 @@ public class Spire {
      */
     public static void main(String[] args) {
         // Takes in User Input
+        System.out.println("Please enter in the file name or path for the deck to use");
         Scanner scanner = new Scanner(System.in);
         String fileName = scanner.nextLine();
 
@@ -112,7 +118,6 @@ public class Spire {
                         cost = (int)split[1].strip().charAt(0) - 48;
                         total+= cost;
                         costFrequency[cost]++;
-
                     }else{
                         // If it is invalid it will append energy to the end and then if there
                         // Are more than 10 invalid cards then it will return and print the void file.
@@ -126,7 +131,7 @@ public class Spire {
             }
 
             //Write PDF REPORT
-            writePDF(id,total,costFrequency,invalid);
+            writePDF(id,total, costFrequency,invalid);
 
         }catch (FileNotFoundException e){
             System.out.println("File not found");
@@ -180,7 +185,8 @@ public class Spire {
     private static void voidFile(int id) {
         //Make the void pdf
         // I used the Javadoc for OpenPDF as well as the Tutorial to help me understand
-        // how to use this library.
+        // how to use this library:
+        // https://javadoc.io/doc/com.github.librepdf/openpdf/latest/com.github.librepdf.openpdf/org/openpdf/text/pdf/PdfDocument.html
         Document document = new Document();
         try {
             PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream("SpireDeck_" + id + "(VOID).pdf"));
@@ -200,8 +206,61 @@ public class Spire {
      * @param frequency An integer array of the frequency of each valid cost in the deck.
      * @param invalid An ArrayList of all invalid cards in the deck.
      */
-    private static void writePDF(int id, int total, int[] frequency, ArrayList<String> invalid){
+    private static void writePDF(int id, int total,  int[] frequency, ArrayList<String> invalid){
 
+        Document document = new Document();
+        try {
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("SpireDeck_" + id + ".pdf"));
+            document.open();
+            // Write Deck id
+            document.add(new Paragraph("Deck id: "+ id));
+
+            // Write Total cost of all cards in the deck
+            document.add(new Paragraph("Total cost: "+ total + " energy"));
+
+            // Histogram of all the cards in the deck
+            // I used the JFreeChart Documentation and the official demo on github
+            // to help me understand how to make the histogram.
+            HistogramDataset frequencies = new HistogramDataset();
+            int count = 0;
+            for(int i=0;i<frequency.length;i++){
+                count+=frequency[i];
+            }
+
+            // Get all the raw information back for the Histogram creation
+            int index = 0;
+            double data[]  = new double [count];
+            for(int i=0;i<frequency.length;i++){
+                for(int j=0; j<frequency[i];j++){
+                    data[index] = i;
+                    index++;
+                }
+            }
+
+            frequencies.addSeries("Data", data, 7, 0.0, 7.0);
+
+            JFreeChart histogram = ChartFactory.createHistogram("Card Cost Distribution",
+                    "Energy", "Frequency",frequencies,PlotOrientation.VERTICAL,false,false,false);
+            ChartUtils.saveChartAsPNG(new File("histogram_"+id+".png"), histogram, 320, 240);
+            // I used the official guide on github to help me understand how to do this.
+            Image histogramImage = Image.getInstance("histogram_"+id+".png");
+            document.add(histogramImage);
+            // List of invalid cards
+            if(invalid.isEmpty()){
+                document.add(new Paragraph("No invalid cards"));
+            } else {
+                document.add(new Paragraph("Invalid Cards:"));
+                for(String s: invalid){
+                    document.add(new Paragraph(s));
+                }
+            }
+
+            document.close();
+            System.out.println("\nSpireDeck_"+id+".pdf was successfully created.");
+
+        } catch ( IOException | DocumentException e){
+            System.out.println("Error with Report creation.");
+        }
     }
 
 }
