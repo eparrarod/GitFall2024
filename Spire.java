@@ -41,7 +41,15 @@ public class Spire {
     private static boolean isValid(File file, int id){
         return !file.exists();
     }
-    
+
+    /**
+     * This reads the deck file to get all the information needed for the report or the void report
+     * if the deck meets certain conditions. This will calculate the total cost of the deck, get the
+     * frequency of each cost for the histogram, call methods to generate either one of the normal
+     * report of the void report.
+     * @param file The deck to write the repot for.
+     * @param id The 9-digit id for the deck.
+     */
     private static void readFile(File file,int id){
         // Try to read the file to see if it is readable or will cause an error.
         try (Scanner fileScanner = new Scanner(file)){
@@ -74,14 +82,29 @@ public class Spire {
                     // Increment card count and if it is over 1000 return with the void file.
                     rowCount++;
                     if(rowCount>1000){
-                        //void file
+                        //Void File
                         return;
                     }
 
                     // Split the row into the card name and the cost which are both strings.
+                    String [] split = line.split(":");
 
                     // See if both the card name and cost are valid values to either add to the total cost
                     // and frequency count or invalid to add to the invalid counter.
+                    if(validCost(split[1].strip()) && validCard(split[0].strip(),validCardNames)){
+                        cost = (int)split[1].strip().charAt(0) - 48;
+                        total+= cost;
+                        costFrequency[cost]++;
+
+                    }else{
+                        // If it is invalid it will append energy to the end and then if there
+                        // Are more than 10 invalid cards then it will return and print the void file.
+                        invalid.add(line + " energy");
+                        if(invalid.size()>10){
+                            //Void File
+                            return;
+                        }
+                    }
                 }
             }
 
@@ -90,6 +113,16 @@ public class Spire {
         }catch (FileNotFoundException e){
             System.out.println("File not found");
         }
+    }
+
+    /**
+     * This sees if the cost of a card is a valid cost, being between and including 0 and 6.
+     * @param cost The cost of the card as a string.
+     * @return True if the cost is valid and False if the cost is invalid.
+     */
+    private static boolean validCost(String cost){
+        // Found .matches from JavaDoc on String class
+        return cost.matches("[0-6]");
     }
 
     /**
