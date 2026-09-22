@@ -1,5 +1,22 @@
-import java.util.*;
-import java.io.*;
+package src;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Random;
+
+// This is where I found the .jar file for OpenPDF: https://repo1.maven.org/maven2/com/github/librepdf/openpdf/3.0.5/
+import org.openpdf.text.Document;
+import org.openpdf.text.DocumentException;
+import org.openpdf.text.Paragraph;
+import org.openpdf.text.pdf.PdfWriter;
+
+// This is where I found the .jar file for JFreeChart:https://mvnrepository.com/artifact/org.jfree/jfreechart/1.5.6
+
 
 public class Spire {
 
@@ -9,10 +26,9 @@ public class Spire {
      * @param args The user input which should be the file name for the deck.
      */
     public static void main(String[] args) {
-
         // Takes in User Input
         Scanner scanner = new Scanner(System.in);
-        String fileName =scanner.nextLine();
+        String fileName = scanner.nextLine();
 
         //Creates a file using the input
         File file = new File(fileName);
@@ -26,6 +42,7 @@ public class Spire {
 
         // Checks to see if the deck is valid or not to see if it should read the file and continue or not.
         if(!isValid(file,id)){
+            System.out.println("Invalid File");
             return;
         }else{
             readFile(file,id);
@@ -39,7 +56,7 @@ public class Spire {
      * @return True if the file does not exist and False if the file does exist.
      */
     private static boolean isValid(File file, int id){
-        return !file.exists();
+        return file.exists();
     }
 
     /**
@@ -50,7 +67,7 @@ public class Spire {
      * @param file The deck to write the repot for.
      * @param id The 9-digit id for the deck.
      */
-    private static void readFile(File file,int id){
+    private static void readFile(File file,int id) {
         // Try to read the file to see if it is readable or will cause an error.
         try (Scanner fileScanner = new Scanner(file)){
 
@@ -69,7 +86,7 @@ public class Spire {
             // Count of how many cards there are in the deck
             int rowCount=0;
 
-            // The ArrayList of all valid card names which are real Slay the Spire | card names
+            // The ArrayList of all valid card names which are real Slay the src.Spire | card names
             ArrayList<String> validCardNames = validNames();
 
             // Iterate over the entire deck
@@ -128,7 +145,7 @@ public class Spire {
 
     /**
      * This checks if a card's name is in the ArrayList of valid names, which are real
-     * names of Slay the Spire | cards, or not to check if a card is valid from its name.
+     * names of Slay the src.Spire | cards, or not to check if a card is valid from its name.
      * @param cardName The name of the card to check.
      * @param validCardNames The ArrayList of valid card names.
      * @return True if the card name is valid and False if the card name is invalid.
@@ -139,13 +156,13 @@ public class Spire {
 
     /**
      * This reads a file on the same directory as the program called cards.txt, which contains
-     * all the valid card names from Slay the Spire where each row is one card name, and
+     * all the valid card names from Slay the src.Spire where each row is one card name, and
      * puts them in an ArrayList.
      * @return ArrayList of with all the card names inside of it.
      * @throws FileNotFoundException
      */
     private static ArrayList<String> validNames() throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("cards.txt"));
+        Scanner scanner = new Scanner(new File("src/cards.txt"));
 
         ArrayList<String> validNames = new ArrayList<>();
 
@@ -160,9 +177,19 @@ public class Spire {
      * This method takes in the ID of the deck and produces the VOID PDF.
      * @param id The 9-digit id of the deck.
      */
-    private static void voidFile(int id){
+    private static void voidFile(int id) {
         //Make the void pdf
-
+        // I used the Javadoc for OpenPDF as well as the Tutorial to help me understand
+        // how to use this library.
+        Document document = new Document();
+        try {
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream("SpireDeck_" + id + "(VOID).pdf"));
+            document.open();
+            document.add(new Paragraph("VOID"));
+            document.close();
+        }catch (IOException | DocumentException e){
+            System.out.println("Error with Void Report creation.");
+        }
     }
 
     /**
