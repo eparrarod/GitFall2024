@@ -82,7 +82,7 @@ public class Spire {
                     // Increment card count and if it is over 1000 return with the void file.
                     rowCount++;
                     if(rowCount>1000){
-                        //Void File
+                        voidFile(id);
                         return;
                     }
 
@@ -101,7 +101,7 @@ public class Spire {
                         // Are more than 10 invalid cards then it will return and print the void file.
                         invalid.add(line + " energy");
                         if(invalid.size()>10){
-                            //Void File
+                            voidFile(id);
                             return;
                         }
                     }
@@ -109,6 +109,7 @@ public class Spire {
             }
 
             //Write PDF REPORT
+            writePDF(id,total,costFrequency,invalid);
 
         }catch (FileNotFoundException e){
             System.out.println("File not found");
@@ -152,6 +153,27 @@ public class Spire {
             validNames.add(scanner.nextLine().toLowerCase().strip());
         }
         return validNames;
+
+    }
+
+    /**
+     * This method takes in the ID of the deck and produces the VOID PDF.
+     * @param id The 9-digit id of the deck.
+     */
+    private static void voidFile(int id){
+        //Make the void pdf
+
+    }
+
+    /**
+     * This creates the PDF report of the deck featuring its id, histogram, and a list of
+     * invalid cards in the deck.
+     * @param id The 9-digit integer id of the deck.
+     * @param total The total cost of all the cards in the deck.
+     * @param frequency An integer array of the frequency of each valid cost in the deck.
+     * @param invalid An ArrayList of all invalid cards in the deck.
+     */
+    private static void writePDF(int id, int total, int[] frequency, ArrayList<String> invalid){
 
     }
 
